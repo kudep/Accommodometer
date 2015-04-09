@@ -1,11 +1,9 @@
-/* ver 0.7 
-03.04.2015
-*/
+
 #include "Arduino.h"
 #include "A4988.h"
 
 
-A4988::A4988(int En_n, int Dir, int Stp):en_n(En_n), dir(Dir), stp(Stp), h_trlr(H_trlr), f_trlr(F_trlr)
+A4988::A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr):en_n(En_n), dir(Dir), stp(Stp), h_trlr(H_trlr), f_trlr(F_trlr),direct(FORWARD),cnt(0),bias(0),coord(0)
 {}
 
 void A4988::init()
@@ -51,11 +49,11 @@ for(int i=0;i<count; i++)
  cnt++;
  if(direct){
 	bias++;
-	coord++
+	coord++;
  }
  else {
 	 bias--;
-	 coord--:
+	 coord--;
 }
 
 }
@@ -92,7 +90,7 @@ void A4988::clr_bias(void)
  cnt=0; 
 }
 
-void A4988::home(void)
+void A4988::clr_coord(void)
 {
  coord=0; 
 }
@@ -105,4 +103,82 @@ void A4988::comptable( bool direct)
  digitalWrite(dir, LOW);
  
 }
+
+bool A4988::h_trailer(void)
+{
+  static uint8_t reg=0;
+  reg=reg<<1;
+  reg|=(uint8_t)digitalRead(h_trlr);
+  
+  if(reg==1)
+  {
+    reverse();
+    clr_coord();
+    return true;
+  }
+    return false;
+}
+
+bool A4988::f_trailer(void)
+{
+  static uint8_t reg=0;
+  reg=reg<<1;
+  reg|=(uint8_t)digitalRead(f_trlr);
+  
+  if(reg==1)
+  {
+    reverse();
+    return true;
+  }
+    return false;
+}
+
+void A4988::home(void)
+{
+  direct=BACK;
+ while(!h_trailer()) step(STEPS);
+}
+
+void A4988::return_back(void)
+{
+  if(bias>0)
+  {
+  direct=BACK;
+  while(bias) step(STEPS);
+  }
+  else if(bias<0)
+  {
+  direct=FORWARD;
+  while(bias) step(STEPS);
+  }
+}
+
+void A4988::go_to(int st, bool _direct)
+{
+  
+  static bool flag=false;
+  static bool stop_dir=FORWARD;
+  if (!(flag||(stop_dir==_direct)))
+  {
+  direct=_direct;
+  for(int i=0;st>i;i++)
+ {
+   step(STEPS);
+   if(h_trailer())
+   {
+     flag=true;
+     stop_dir=BACK;
+     break;
+   }
+   if(f_trailer())
+   {
+     flag=true;
+     stop_dir=FORWARD;
+     break;
+   }
+ }
+  }
+}
+  
+  
 

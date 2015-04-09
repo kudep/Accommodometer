@@ -1,18 +1,15 @@
-/* ver 0.7 
-03.04.2015
-*/
+
 #include "A4988.h"
 #include <inttypes.h>
 
-A4988 driver(52,53,51); //Eneble, Direct, Step
+A4988 driver(52,53,51,53,51); //Eneble, Direct, Step, Home trailer, Foredg trailer
 int parcel;
 int st_speed;
 int st_count;
 int st_count_p;
 bool st_flag;
+bool direct;
 void case_do(int parcel);
-void step_do(void);
-void trailer(void);
 
 void setup() {
   // put your setup code here, to run once:
@@ -25,6 +22,8 @@ void setup() {
   st_count_p=0;
   st_flag=false;
   driver.init();
+  driver.home();
+  driver.return_back();
 }
 
 
@@ -36,7 +35,6 @@ void loop() {
     Serial.flush();
   }
   step_do();
-  trailer();
 }
 
 
@@ -46,7 +44,7 @@ void step_do(void)
   {
     if(st_count_p<st_count)
     {
-      driver.step(st_speed);
+      driver.go_to(st_speed,direct);
       st_count_p++;
     }
     else
@@ -98,7 +96,7 @@ void case_do(int parcel)
     break;
     
     case 82:  //"R" -Reverse
-    driver.reverse();
+    direct!=direct;
     Serial.println("Reverse");
     break;
     
@@ -115,26 +113,4 @@ void case_do(int parcel)
 }
 
 
-void trailer(void)
-{
-  static uint8_t reg1=0;
-  reg1=reg1<<1;
-  reg1|=(uint8_t)digitalRead(22);
-  
-  static uint8_t reg2=0;
-  reg2=reg2<<1;
-  reg2|=(uint8_t)digitalRead(23);
-  
-  if((reg1==1)||(reg2==1))
-  {
-    driver.reverse();
-    Serial.print("Number of step =");
-    Serial.println(driver.get_count(),DEC);
-    if(driver.get_direct())
-    Serial.println("Forward");
-    else
-    Serial.println("Back");
-    driver.clr_count();
-    
-  }
-}
+

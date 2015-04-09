@@ -1,6 +1,3 @@
-/* ver 0.7 
-03.04.2015
-*/
 #ifndef A4988_H
 #define A4988_H
 
@@ -9,6 +6,7 @@
 
 #define DELAY_PULSE_US 3
 #define DELAY_BETWEEN_US 180
+#define STEPS 2
 
 class A4988 {
 	public:
@@ -16,20 +14,8 @@ class A4988 {
 		A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
                 
 		//Init method:
-        void init(void);
+                void init(void);
                 
-		//reverse method:
-		void reverse(void);
-
-		//forward method:
-		void forward(void);
-
-		//back method:
-		void back(void);
-
-		//step method:
-		void step(int count);
-
 		//coord get method:
 		long int get_coord(void);
 
@@ -45,13 +31,41 @@ class A4988 {
 		//count is clear method:
 		void clr_count(void);
 
-		//count is clear method:
+		//beas is clear method:
 		void clr_bias(void);
+
+		//go to home method:
+		void home(void);
+
+		//go to back method:
+		void return_back(void);
+
+		//go to the point method:
+		void go_to(int st, bool _direct);
 	private:
-        void comptable(bool direct);
+		//step method:
+		void step(int count);
+                
+		//reverse method:
+		void reverse(void);
+
+		//forward method:
+		void forward(void);
+
+		//back method:
+		void back(void);
+
+		//home trailer method:
+		bool h_trailer(void);
+
+		//foredg trailer method:
+		bool f_trailer(void);
+
+
+                void comptable(bool direct);
 		bool direct;        // Direction of rotation
 
-		void home(void);
+		void clr_coord(void);
 		
  		// motor pin numbers:
 		int en_n;
@@ -62,7 +76,7 @@ class A4988 {
 
  		// count:
 		long int cnt;
-		long in bias;
+		long int bias;
 		long int coord;
 
 };
