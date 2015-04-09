@@ -13,10 +13,10 @@
 class A4988 {
 	public:
 		// constructors:
-		A4988(int En_n, int Dir, int Stp); //Eneble, Direct, Step
+		A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
                 
 		//Init method:
-                void init(void);
+        void init(void);
                 
 		//reverse method:
 		void reverse(void);
@@ -30,6 +30,12 @@ class A4988 {
 		//step method:
 		void step(int count);
 
+		//coord get method:
+		long int get_coord(void);
+
+		//bias get method:
+		long int get_bias(void);
+
 		//count get method:
 		int get_count(void);
 
@@ -38,17 +44,26 @@ class A4988 {
 
 		//count is clear method:
 		void clr_count(void);
+
+		//count is clear method:
+		void clr_bias(void);
 	private:
-                void comptable(bool direct);
+        void comptable(bool direct);
 		bool direct;        // Direction of rotation
+
+		void home(void);
 		
  		// motor pin numbers:
 		int en_n;
 		int dir;
 		int stp;
+		int h_trlr;
+		int f_trlr;
 
  		// count:
-		int cnt;
+		long int cnt;
+		long in bias;
+		long int coord;
 
 };
 
