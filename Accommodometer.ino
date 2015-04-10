@@ -1,8 +1,13 @@
 
 #include "A4988.h"
 #include <inttypes.h>
+#define ENEBL 52
+#define DIRECT 53
+#define STEP 51
+#define H_TRAILER 22
+#define F_TRAILER 23
 
-A4988 driver(52,53,51,53,51); //Eneble, Direct, Step, Home trailer, Foredg trailer
+A4988 driver(ENEBL,DIRECT,STEP,H_TRAILER,F_TRAILER); //Eneble, Direct, Step, Home trailer, Foredg trailer
 int parcel;
 int st_speed;
 int st_count;
