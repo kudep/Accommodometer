@@ -10,7 +10,7 @@
 
 class A4988 {
 	public:
-		// constructors:
+		// Constructors:
 		A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
                 
 		//Init method:
