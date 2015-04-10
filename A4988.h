@@ -1,8 +1,8 @@
 #ifndef A4988_H
 #define A4988_H
 
-#define FORWARD true
-#define BACK false
+#define FORWARD false
+#define BACK !FORWARD
 
 #define DELAY_PULSE_US 3
 #define DELAY_BETWEEN_US 180
@@ -42,12 +42,12 @@ class A4988 {
 
 		//go to the point method:
 		void go_to(int st, bool _direct);
-	private:
 		//step method:
 		void step(int count);
-                
 		//reverse method:
 		void reverse(void);
+	private:
+                
 
 		//forward method:
 		void forward(void);

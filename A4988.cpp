@@ -48,12 +48,12 @@ for(int i=0;i<count; i++)
  delayMicroseconds(DELAY_BETWEEN_US);
  cnt++;
  if(direct){
-	bias++;
-	coord++;
- }
- else {
 	 bias--;
 	 coord--;
+ }
+ else {
+	bias++;
+	coord++;
 }
 
 }
@@ -135,20 +135,24 @@ bool A4988::f_trailer(void)
 
 void A4988::home(void)
 {
-  direct=BACK;
+  if(!digitalRead(h_trlr))
+  {
+  back();
  while(!h_trailer()) step(STEPS);
+  }
+  coord=0;
 }
 
 void A4988::return_back(void)
 {
   if(bias>0)
   {
-  direct=BACK;
+  back();
   while(bias) step(STEPS);
   }
   else if(bias<0)
   {
-  direct=FORWARD;
+  forward();
   while(bias) step(STEPS);
   }
 }
@@ -158,9 +162,11 @@ void A4988::go_to(int st, bool _direct)
   
   static bool flag=false;
   static bool stop_dir=FORWARD;
-  if (!(flag||(stop_dir==_direct)))
+  if (!(flag &&(stop_dir==_direct)))
   {
-  direct=_direct;
+   flag=false;
+  if(direct!=_direct)
+  reverse();
   for(int i=0;st>i;i++)
  {
    step(STEPS);

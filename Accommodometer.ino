@@ -13,14 +13,12 @@ int st_speed;
 int st_count;
 int st_count_p;
 bool st_flag;
-bool direct;
+bool direct_st;
 void case_do(int parcel);
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(22,INPUT);
-  pinMode(23,INPUT);
   parcel=0;
   st_speed=2;
   st_count=2000;
@@ -49,7 +47,7 @@ void step_do(void)
   {
     if(st_count_p<st_count)
     {
-      driver.go_to(st_speed,direct);
+     driver.go_to(st_speed,direct_st);
       st_count_p++;
     }
     else
@@ -75,7 +73,7 @@ void case_do(int parcel)
     st_flag=false;
     Serial.println("Stop");
     break;
-    
+ 
     case 70:  //"F" - Faster
     st_speed*=2;
     Serial.print("Step of cycle =");
@@ -92,16 +90,27 @@ void case_do(int parcel)
     st_count+=10;
     Serial.print("Number of cycle =");
     Serial.println(st_count,DEC);
+    
+    
+    Serial.print("COORD =");
+    Serial.println(driver.get_coord(),DEC);
+    Serial.print("BIAS =");
+    Serial.println(driver.get_bias(),DEC);
+    Serial.print("COUNT =");
+    Serial.println(driver.get_count(),DEC);
+    driver.home();
+    
     break;
     
     case 76:  //"L" -Less
     st_count-=10;
     Serial.print("Number of cycle =");
     Serial.println(st_count,DEC);
+    driver.return_back();
     break;
     
     case 82:  //"R" -Reverse
-    direct!=direct;
+    direct_st!=direct_st;
     Serial.println("Reverse");
     break;
     
