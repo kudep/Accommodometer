@@ -3,11 +3,19 @@
 #include "A4988.h"
 
 
-A4988::A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr):en_n(En_n), dir(Dir), stp(Stp), h_trlr(H_trlr), f_trlr(F_trlr),direct(FORWARD),cnt(0),bias(0),coord(0)
+A4988::A4988()
 {}
 
-void A4988::init()
+void A4988::init(int En_n, int Dir, int Stp, int H_trlr, int F_trlr) 
 {
+	en_n = En_n;
+	dir = Dir;
+	stp = Stp;
+	h_trlr = H_trlr;
+	f_trlr = F_trlr;
+	direct = FORWARD;
+	cnt = bias = coord = 0;
+
 	pinMode(en_n,OUTPUT);
 	pinMode(dir,OUTPUT);
 	pinMode(stp,OUTPUT);

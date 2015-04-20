@@ -11,10 +11,10 @@
 class A4988 {
 	public:
 		// Constructors:
-		A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
+		A4988();
                 
 		//Init method:
-        void init(void);
+		void init(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
                 
 		//coord get method:
 		long int get_coord(void);
@@ -44,16 +44,17 @@ class A4988 {
 		void go_to(int st);
 		//reverse method:
 		void reverse(void);
-	private:
-
-		//step method:
-		void step(int count);
 
 		//forward method:
 		void forward(void);
 
 		//back method:
 		void back(void);
+
+	private:
+
+		//step method:
+		void step(int count);
 
 		//home trailer method:
 		bool h_trailer(void);
