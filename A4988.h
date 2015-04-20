@@ -14,7 +14,7 @@ class A4988 {
 		A4988(int En_n, int Dir, int Stp, int H_trlr, int F_trlr); //Eneble, Direct, Step, Home trailer, Foredg trailer
                 
 		//Init method:
-                void init(void);
+        void init(void);
                 
 		//coord get method:
 		long int get_coord(void);
@@ -41,13 +41,13 @@ class A4988 {
 		void return_back(void);
 
 		//go to the point method:
-		void go_to(int st, bool _direct);
-		//step method:
-		void step(int count);
+		void go_to(int st);
 		//reverse method:
 		void reverse(void);
 	private:
-                
+
+		//step method:
+		void step(int count);
 
 		//forward method:
 		void forward(void);
@@ -61,12 +61,13 @@ class A4988 {
 		//foredg trailer method:
 		bool f_trailer(void);
 
-
-                void comptable(bool direct);
-		bool direct;        // Direction of rotation
+        void comptable(bool direct);
 
 		void clr_coord(void);
-		
+
+
+		bool direct;        // Direction of rotation
+
  		// motor pin numbers:
 		int en_n;
 		int dir;

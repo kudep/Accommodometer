@@ -46,8 +46,8 @@ void step_do(void)
   if(st_flag)
   {
     if(st_count_p<st_count)
-    {
-     driver.go_to(st_speed,direct_st);
+	{
+     driver.go_to(st_speed);
       st_count_p++;
     }
     else
@@ -110,8 +110,9 @@ void case_do(int parcel)
     break;
     
     case 82:  //"R" -Reverse
-    direct_st!=direct_st;
-    Serial.println("Reverse");
+		Serial.println("Reverse");
+		driver.reverse();
+		Serial.println(driver.get_direct());
     break;
     
     case 84:  //"T" - Transsmit

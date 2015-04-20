@@ -32,7 +32,7 @@ comptable(direct);
 
 void A4988::reverse()
 {
-direct=!direct;
+	direct = !direct;
 comptable(direct);
 }
 
@@ -70,6 +70,7 @@ long int A4988::get_bias(void)
 {
   return bias;
 }
+
 long int A4988::get_coord(void)
 {
   return coord;
@@ -112,7 +113,6 @@ bool A4988::h_trailer(void)
   
   if(reg==1)
   {
-    reverse();
     clr_coord();
     return true;
   }
@@ -127,7 +127,6 @@ bool A4988::f_trailer(void)
   
   if(reg==1)
   {
-    reverse();
     return true;
   }
     return false;
@@ -137,10 +136,10 @@ void A4988::home(void)
 {
   if(!digitalRead(h_trlr))
   {
-  back();
- while(!h_trailer()) step(STEPS);
+	 back();
+	 while(!h_trailer()) step(STEPS);
+	 forward();
   }
-  coord=0;
 }
 
 void A4988::return_back(void)
@@ -157,28 +156,26 @@ void A4988::return_back(void)
   }
 }
 
-void A4988::go_to(int st, bool _direct)
+void A4988::go_to(int st)
 {
   
-  static bool flag=false;
+	static bool flag = true;
   static bool stop_dir=FORWARD;
-  if (!(flag &&(stop_dir==_direct)))
+  if ((flag || (stop_dir != direct)))
   {
-   flag=false;
-  if(direct!=_direct)
-  reverse();
+	  flag = true;
   for(int i=0;st>i;i++)
  {
    step(STEPS);
    if(h_trailer())
    {
-     flag=true;
+     flag=false;
      stop_dir=BACK;
      break;
    }
    if(f_trailer())
    {
-     flag=true;
+	   flag = false;
      stop_dir=FORWARD;
      break;
    }
