@@ -2,8 +2,8 @@
 #ifndef KESES_SJOYS_H
 #define KESES_SJOYS_H
 
-#define VOLT_VR_MIN 700
-#define VOLT_VR_MAX 800
+#define VOLT_VR_MIN 600
+#define VOLT_VR_MAX 900
 #define VOLT_SW_MIN 10
 #define VOLT_SW_MAX 250
 #define STEP_DR 2
