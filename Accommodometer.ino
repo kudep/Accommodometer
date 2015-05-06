@@ -11,6 +11,7 @@
 LCDShield lcd;
 KeyesSjoys KeSj;
 char prcl;
+bool sclct=false;
 void setup() {
   Serial.begin(9600);
 
@@ -24,11 +25,22 @@ void setup() {
   }
   Serial.println("OK!");
   KeSj.init();
-}
 
+}
 void loop() {
 	COM();
-	KeSj.task();
+	KeSj.task(sclct);
+	if (Serial.available())
+	{
+		if ((Serial.read() - 48) == 0)
+		{
+			sclct = ~sclct;
+			Serial.println("Done");
+		}
+		else
+			Serial.println("Invalid");
+
+	}
 }
 
 // This function opens a Windows Bitmap (BMP) file and
