@@ -30,17 +30,6 @@ void setup() {
 void loop() {
 	COM();
 	KeSj.task(sclct);
-	if (Serial.available())
-	{
-		if ((Serial.read() - 48) == 0)
-		{
-			sclct = ~sclct;
-			Serial.println("Done");
-		}
-		else
-			Serial.println("Invalid");
-
-	}
 }
 
 // This function opens a Windows Bitmap (BMP) file and
@@ -217,6 +206,9 @@ char* change_str()
 	str[4] = 'm';
 	str[5] = 'p';
 	str[6] = '\0';
+
+	KeSj.glob_str = str;
+
 	return str;
 	
 }
@@ -259,6 +251,11 @@ void COM(void)
 		switch (prcl){
 		case 0:  //"0" - Clear
 			bmpDraw(change_str(), 0, 0);
+			break;
+
+		case 1:  //"1" - Next mode
+			sclct = ~sclct;
+			Serial.println("Done");
 			break;
 
 		default:

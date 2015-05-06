@@ -45,6 +45,8 @@ void KeyesSjoys::task(bool sclct)
 			Serial.print("COUNT =");
 			Serial.print(transl(driver.get_count(), 1000, 1), DEC);
 			Serial.println(" * 1k step");
+			Serial.print("Name file is ");
+			Serial.println(glob_str);
 			return;
 		}
 

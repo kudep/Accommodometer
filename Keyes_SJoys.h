@@ -18,6 +18,7 @@
 #include "Arduino.h"
 #include "A4988.h"
 
+
 class KeyesSjoys
 {
 public:
@@ -25,6 +26,7 @@ public:
 
 	void init(void);
 	void task(bool sclct);
+	char *glob_str;
 private:
 	int read_pin_vr(int pin);
 	bool read_pin_sw(void);
