@@ -5,8 +5,9 @@
 #include "Keyes_SJoys.h"
 #include <inttypes.h>
 
-#define SD_CS   10  // Chip select line for SD card
-#define BKL   45 
+#define SD_CS   2  // Chip select line for SD card
+#define BKL   41 
+#define LED   35 
 
 LCDShield lcd;
 KeyesSjoys KeSj;
@@ -14,9 +15,15 @@ char prcl;
 volatile int encoder_div;
 void setup() {
   Serial.begin(9600);
+  
+  pinMode(PIN_A, INPUT);
+  pinMode(PIN_B, INPUT);
+  digitalWrite(PIN_A,HIGH);
+  digitalWrite(PIN_B,HIGH);
 
-  lcd.init(PHILLIPS);
   pinMode(BKL, OUTPUT);
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED,HIGH);
 
   Serial.print("Initializing SD card...");
   if (!SD.begin(SD_CS)) {
@@ -24,9 +31,10 @@ void setup() {
     return;
   }
   Serial.println("OK!");
+  lcd.init(PHILLIPS);
   KeSj.init(&encoder_div);
   encoder_div = 0;
-  attachInterrupt(PIN_A, irp_encoder, FALLING);
+  attachInterrupt(PIN_B, irp_encoder, FALLING);
 
 }
 void loop() {
@@ -249,17 +257,18 @@ char swch(uint8_t indx)
 void irp_encoder(void)
 {
 	static  uint32_t prevMillis = 0;
-	if ((millis() - prevMillis)>100)
+	if ((millis() - prevMillis)>250)
 	{
 		prevMillis = millis();
-		if (digitalRead(PIN_B)) {
+		if (digitalRead(PIN_A)) {
 			encoder_div--;
 		}
 		else {
 			encoder_div++;
 		}
+        Serial.print("Enc = ");
+	Serial.println((encoder_div));
 	}
-	//Serial.println((encoder_div));
 }
 
 void COM(void)

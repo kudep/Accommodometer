@@ -6,6 +6,7 @@
 #define VOLT_VR_MAX 900
 #define VOLT_SW_MIN 10
 #define VOLT_SW_MAX 250
+//STEP_DR = 2  is optimal
 #define STEP_DR 2
 #define BREAK_INIT 512
 #define DIF_TIME_CLEAR_BREAK 200
@@ -13,6 +14,8 @@
 #define SHIFT_FOR_FILTER 2
 #define MAX_VAL_ENC 128
 #define STEP_RANGE 19200
+
+#define STEP_ENCOD 1000
 
 #include "Configuration.h"
 #include "Arduino.h"
@@ -36,8 +39,8 @@ private:
 
 	int transl(int var, int max, int unity);
 
-	bool flag_forw_go(void);
-	bool flag_back_go(void);
+	int flag_forw_go(void);
+	int flag_back_go(void);
 
 	A4988 driver;
 	volatile int *p_encoder_div;

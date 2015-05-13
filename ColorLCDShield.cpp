@@ -39,10 +39,10 @@ LCDShield::LCDShield()
 	DDRD	=	0x00;
 	PORTD	=	0xFF;
 */
-pinMode(46,OUTPUT);
-pinMode(47,OUTPUT);
-pinMode(48,OUTPUT);
-pinMode(49,OUTPUT);
+pinMode(LCD_RES,OUTPUT);
+pinMode(CS,OUTPUT);
+pinMode(DIO,OUTPUT);
+pinMode(SCK_PIN,OUTPUT);
 }
 
 void LCDShield::LCDCommand(unsigned char data)

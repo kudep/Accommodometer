@@ -9,15 +9,15 @@
 
 //Pins for driver
 #define EN_DR 52
-#define STP_DR 51
-#define DRCT_DR 53
+#define STP_DR 50
+#define DRCT_DR 48
 
 //Pins for encoder
-#define PIN_A 2
+#define PIN_A 4
 #define PIN_B 3
 
 //Pins for trailer
-#define H_TR 22
-#define F_TR 23
+#define H_TR 46
+#define F_TR 44
 
 #endif

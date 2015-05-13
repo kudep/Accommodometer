@@ -51,16 +51,16 @@ class A4988 {
 		//back method:
 		void back(void);
 
-	private:
-
-		//step method:
-		void step(int count);
-
 		//home trailer method:
 		bool h_trailer(void);
 
 		//foredg trailer method:
 		bool f_trailer(void);
+
+	private:
+
+		//step method:
+		void step(int count);
 
         void comptable(bool direct);
 

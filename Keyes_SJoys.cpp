@@ -18,6 +18,7 @@ void KeyesSjoys::task(void)
 	static uint16_t brx_pos_c = BREAK_INIT;
 	static uint16_t brx_neg_c = BREAK_INIT;
 	static uint16_t br = BREAK_INIT;
+	int cirk;
 
 
 	//value();
@@ -35,11 +36,11 @@ void KeyesSjoys::task(void)
 		{
 			brx_pos_c = brx_neg_c = BREAK_INIT;
 			Serial.print("COORD =");
-			Serial.print(transl(driver.get_coord(), STEP_RANGE, 30), DEC);
-			Serial.println(" cm");
+			Serial.print(transl(driver.get_coord(), STEP_RANGE, 230), DEC);
+			Serial.println(" mm");
 			Serial.print("BIAS =");
-			Serial.print(transl(driver.get_bias(), STEP_RANGE, 30), DEC);
-			Serial.println("cm");
+			Serial.print(transl(driver.get_bias(), STEP_RANGE, 230), DEC);
+			Serial.println("mm");
 			Serial.print("COUNT =");
 			Serial.print(transl(driver.get_count(), 1000, 1), DEC);
 			Serial.println(" * 1k step");
@@ -47,8 +48,8 @@ void KeyesSjoys::task(void)
 			Serial.println(glob_str);
 			return;
 		}
-
-		if (flag_forw_go())
+                cirk=flag_forw_go();
+		while((driver.get_count()<cirk))
 		{
 			if (br) br--;
 			else
@@ -60,9 +61,15 @@ void KeyesSjoys::task(void)
 				driver.forward();
 				driver.go_to(STEP_DR);
 			}
-			return;
+                   if(driver.h_trailer()||driver.f_trailer())
+                  {
+                    (*p_encoder_div)=0;
+                    return;
+                  }
 		}
-		else if (flag_back_go())
+                
+                cirk=flag_back_go();
+                while((driver.get_count()<cirk))
 		{
 
 			if (br) br--;
@@ -75,8 +82,11 @@ void KeyesSjoys::task(void)
 				driver.back();
 				driver.go_to(STEP_DR);
 			}
-			return;
-
+                   if(driver.h_trailer()||driver.f_trailer())
+                   {
+                    (*p_encoder_div)=0;
+                    return;
+                   }
 		}
 }
 
@@ -96,38 +106,38 @@ bool KeyesSjoys::read_pin_sw(void)
 
 int  KeyesSjoys::transl(int var, int max, int unity)
 {
-	return var / max*unity;
+	return (var*unity / max);
 }
 
 
-bool KeyesSjoys::flag_forw_go(void)
+int KeyesSjoys::flag_forw_go(void)
 {
 	if ((*p_encoder_div))
 	{
 		if ((*p_encoder_div) > 0)
 		{
 			(*p_encoder_div)--;
-			return true;
+			return STEP_ENCOD+driver.get_count();
 		}
-		else return false;
+		else return 0;
 	}
-	else if (read_pin_vr(VRX) > 0) return true;
-	else return false;
+	else if (read_pin_vr(VRX) > 0) return driver.get_count()+1;
+	else return 0;
 
 }
-bool KeyesSjoys::flag_back_go(void)
+int KeyesSjoys::flag_back_go(void)
 {
 	if ((*p_encoder_div))
 	{
 		if ((*p_encoder_div) < 0)
 		{
 			(*p_encoder_div)++;
-			return true;
+			return driver.get_count()+STEP_ENCOD;
 		}
-		else return false;
+		else return 0;
 	}
-	else if (read_pin_vr(VRX) < 0) return true;
-	else return false;
+	else if (read_pin_vr(VRX) < 0) return driver.get_count()+1;
+	else return 0;
 
 }
 void KeyesSjoys::value(void)
