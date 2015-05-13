@@ -24,16 +24,23 @@ class KeyesSjoys
 public:
 	KeyesSjoys(void);
 
-	void init(void);
-	void task(bool sclct);
+	void init(volatile int *encoder_div);
+	void task(void);
+	void irp_encoder(void);
+	void value(void);
 	char *glob_str;
 private:
+
 	int read_pin_vr(int pin);
 	bool read_pin_sw(void);
+
 	int transl(int var, int max, int unity);
-	int filtrated_encoder(void);
-	void decoder_control(void);
+
+	bool flag_forw_go(void);
+	bool flag_back_go(void);
+
 	A4988 driver;
+	volatile int *p_encoder_div;
 
 };
 

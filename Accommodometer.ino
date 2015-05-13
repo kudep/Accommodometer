@@ -11,7 +11,7 @@
 LCDShield lcd;
 KeyesSjoys KeSj;
 char prcl;
-bool sclct=false;
+volatile int encoder_div;
 void setup() {
   Serial.begin(9600);
 
@@ -24,12 +24,14 @@ void setup() {
     return;
   }
   Serial.println("OK!");
-  KeSj.init();
+  KeSj.init(&encoder_div);
+  encoder_div = 0;
+  attachInterrupt(PIN_A, irp_encoder, FALLING);
 
 }
 void loop() {
 	COM();
-	KeSj.task(sclct);
+	KeSj.task();
 }
 
 // This function opens a Windows Bitmap (BMP) file and
@@ -242,6 +244,24 @@ char swch(uint8_t indx)
 	}
 }
 
+
+
+void irp_encoder(void)
+{
+	static  uint32_t prevMillis = 0;
+	if ((millis() - prevMillis)>100)
+	{
+		prevMillis = millis();
+		if (digitalRead(PIN_B)) {
+			encoder_div--;
+		}
+		else {
+			encoder_div++;
+		}
+	}
+	//Serial.println((encoder_div));
+}
+
 void COM(void)
 {
 
@@ -251,11 +271,6 @@ void COM(void)
 		switch (prcl){
 		case 0:  //"0" - Clear
 			bmpDraw(change_str(), 0, 0);
-			break;
-
-		case 1:  //"1" - Next mode
-			sclct = ~sclct;
-			Serial.println("Done");
 			break;
 
 		default:

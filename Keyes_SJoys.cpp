@@ -4,30 +4,28 @@ KeyesSjoys::KeyesSjoys()
 {}
 
 
-void KeyesSjoys::init(void)
+void KeyesSjoys::init(volatile int *p_encoder_div)
 {
 
 	driver.init(EN_DR, DRCT_DR, STP_DR, H_TR, F_TR); //Eneble, Direct, Step, Home trailer, Foredg trailer
 	driver.home();
 	driver.return_back();
+	this->p_encoder_div = p_encoder_div;
 }
 
-void KeyesSjoys::task(bool sclct)
+void KeyesSjoys::task(void)
 {
 	static uint16_t brx_pos_c = BREAK_INIT;
 	static uint16_t brx_neg_c = BREAK_INIT;
 	static uint16_t br = BREAK_INIT;
 
 
+	//value();
+
 	static uint32_t st_time = millis();
 
 	if ((millis() - st_time)>DIF_TIME_CLEAR_BREAK) brx_pos_c = brx_neg_c = BREAK_INIT;
 
-
-
-
-	if (sclct)
-	{
 
 		static uint8_t reg = 0;
 		reg = reg << 1;
@@ -50,7 +48,7 @@ void KeyesSjoys::task(bool sclct)
 			return;
 		}
 
-		if (read_pin_vr(VRX) > 0)
+		if (flag_forw_go())
 		{
 			if (br) br--;
 			else
@@ -64,7 +62,7 @@ void KeyesSjoys::task(bool sclct)
 			}
 			return;
 		}
-		else if (read_pin_vr(VRX) < 0)
+		else if (flag_back_go())
 		{
 
 			if (br) br--;
@@ -80,12 +78,6 @@ void KeyesSjoys::task(bool sclct)
 			return;
 
 		}
-	}
-	else
-	{
-		decoder_control();
-	}
-
 }
 
 int KeyesSjoys::read_pin_vr(int pin)
@@ -107,38 +99,44 @@ int  KeyesSjoys::transl(int var, int max, int unity)
 	return var / max*unity;
 }
 
-int KeyesSjoys::filtrated_encoder(void)
-{
-	return  ((uint8_t)analogRead(ENCOD)) >> SHIFT_FOR_FILTER;
-}
 
-void  KeyesSjoys::decoder_control(void)
+bool KeyesSjoys::flag_forw_go(void)
 {
-	static uint8_t inf = 0;
-	static uint8_t sup = 0;
-	static uint8_t pos = 0;
-
-	inf = filtrated_encoder() - 1;
-	sup = inf + 2;
-	pos = transl(driver.get_coord(), STEP_RANGE, MAX_VAL_ENC);
-	while ((inf > pos) && (sup < pos))
+	if ((*p_encoder_div))
 	{
-		if (inf > pos)
+		if ((*p_encoder_div) > 0)
 		{
-			driver.forward();
-			for (int i; i < (STEP_RANGE / (MAX_VAL_ENC*STEP_DR)); i++)
-				driver.go_to(STEP_DR);
+			(*p_encoder_div)--;
+			return true;
 		}
-		else
-		{
-			driver.back();
-			for (int i; i < (STEP_RANGE / (MAX_VAL_ENC*STEP_DR)); i++)
-				driver.go_to(STEP_DR);
-		}
-		inf = filtrated_encoder() - 1;
-		sup = inf + 2;
-		pos = transl(driver.get_coord(), STEP_RANGE, MAX_VAL_ENC);
-
+		else return false;
 	}
+	else if (read_pin_vr(VRX) > 0) return true;
+	else return false;
 
+}
+bool KeyesSjoys::flag_back_go(void)
+{
+	if ((*p_encoder_div))
+	{
+		if ((*p_encoder_div) < 0)
+		{
+			(*p_encoder_div)++;
+			return true;
+		}
+		else return false;
+	}
+	else if (read_pin_vr(VRX) < 0) return true;
+	else return false;
+
+}
+void KeyesSjoys::value(void)
+{
+
+	static  uint32_t prevMillis = 0;
+	if ((millis() - prevMillis)>1000)
+	{
+		prevMillis = millis();
+		Serial.println((*p_encoder_div));
+	}
 }

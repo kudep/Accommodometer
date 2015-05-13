@@ -13,7 +13,8 @@
 #define DRCT_DR 53
 
 //Pins for encoder
-#define ENCOD 3
+#define PIN_A 2
+#define PIN_B 3
 
 //Pins for trailer
 #define H_TR 22
