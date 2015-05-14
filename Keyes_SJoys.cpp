@@ -48,7 +48,8 @@ void KeyesSjoys::task(void)
 			Serial.println(glob_str);
 			return;
 		}
-                cirk=flag_forw_go();
+
+        cirk=flag_forw_go();
 		while((driver.get_count()<cirk))
 		{
 			if (br) br--;
@@ -59,17 +60,17 @@ void KeyesSjoys::task(void)
 				if (brx_pos_c) brx_pos_c--;
 				br = brx_pos_c;
 				driver.forward();
-				driver.go_to(STEP_DR);
+				if (!driver.go_to(STEP_DR))
+				{
+					(*p_encoder_div) = 0;
+					return;
+				}
 			}
-                   if(driver.h_trailer()||driver.f_trailer())
-                  {
-                    (*p_encoder_div)=0;
-                    return;
-                  }
+                 
 		}
                 
-                cirk=flag_back_go();
-                while((driver.get_count()<cirk))
+        cirk=flag_back_go();
+        while((driver.get_count()<cirk))
 		{
 
 			if (br) br--;
@@ -80,13 +81,12 @@ void KeyesSjoys::task(void)
 				if (brx_neg_c) brx_neg_c--;
 				br = brx_neg_c;
 				driver.back();
-				driver.go_to(STEP_DR);
+				if (!driver.go_to(STEP_DR))
+				{
+					(*p_encoder_div) = 0;
+					return;
+				}
 			}
-                   if(driver.h_trailer()||driver.f_trailer())
-                   {
-                    (*p_encoder_div)=0;
-                    return;
-                   }
 		}
 }
 
@@ -112,31 +112,35 @@ int  KeyesSjoys::transl(int var, int max, int unity)
 
 int KeyesSjoys::flag_forw_go(void)
 {
+	driver.clr_count();
+
 	if ((*p_encoder_div))
 	{
 		if ((*p_encoder_div) > 0)
 		{
 			(*p_encoder_div)--;
-			return STEP_ENCOD+driver.get_count();
+			return STEP_ENCOD;
 		}
 		else return 0;
 	}
-	else if (read_pin_vr(VRX) > 0) return driver.get_count()+1;
+	else if (read_pin_vr(VRX) > 0) return 1;
 	else return 0;
 
 }
 int KeyesSjoys::flag_back_go(void)
 {
+	driver.clr_count();
+
 	if ((*p_encoder_div))
 	{
 		if ((*p_encoder_div) < 0)
 		{
 			(*p_encoder_div)++;
-			return driver.get_count()+STEP_ENCOD;
+			return STEP_ENCOD;
 		}
 		else return 0;
 	}
-	else if (read_pin_vr(VRX) < 0) return driver.get_count()+1;
+	else if (read_pin_vr(VRX) < 0) return 1;
 	else return 0;
 
 }

@@ -164,31 +164,33 @@ void A4988::return_back(void)
   }
 }
 
-void A4988::go_to(int st)
+bool A4988::go_to(int st)
 {
-  
+
 	static bool flag = true;
-  static bool stop_dir=FORWARD;
-  if ((flag || (stop_dir != direct)))
-  {
-	  flag = true;
-  for(int i=0;st>i;i++)
- {
-   step(STEPS);
-   if(h_trailer())
-   {
-     flag=false;
-     stop_dir=BACK;
-     break;
-   }
-   if(f_trailer())
-   {
-	   flag = false;
-     stop_dir=FORWARD;
-     break;
-   }
- }
-  }
+	static bool stop_dir = FORWARD;
+	if ((flag || (stop_dir != direct)))
+	{
+		flag = true;
+		for (int i = 0; st>i; i++)
+		{
+			step(STEPS);
+			if (h_trailer())
+			{
+				flag = false;
+				stop_dir = BACK;
+				return false;
+			}
+			if (f_trailer())
+			{
+				flag = false;
+				stop_dir = FORWARD;
+				return false;
+			}
+		}
+		return true;
+	}
+	else return false;
 }
   
   

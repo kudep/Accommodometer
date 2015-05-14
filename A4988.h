@@ -41,7 +41,7 @@ class A4988 {
 		void return_back(void);
 
 		//go to the point method:
-		void go_to(int st);
+		bool go_to(int st);
 		//reverse method:
 		void reverse(void);
 
@@ -51,13 +51,13 @@ class A4988 {
 		//back method:
 		void back(void);
 
+	private:
+
 		//home trailer method:
 		bool h_trailer(void);
 
 		//foredg trailer method:
 		bool f_trailer(void);
-
-	private:
 
 		//step method:
 		void step(int count);
