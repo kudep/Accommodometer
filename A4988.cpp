@@ -160,7 +160,8 @@ void A4988::return_back(void)
   else if(bias<0)
   {
   forward();
-  while(bias) step(STEPS);
+  while(bias&&!digitalRead(f_trlr))
+                step(STEPS);
   }
 }
 

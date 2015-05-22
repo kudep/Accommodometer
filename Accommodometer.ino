@@ -33,8 +33,8 @@ void setup() {
   Serial.println("OK!");
   lcd.init(PHILLIPS);
   KeSj.init(&encoder_div);
+  attachInterrupt(PIN_B, irp_encoder, RISING);
   encoder_div = 0;
-  attachInterrupt(PIN_B, irp_encoder, FALLING);
 
 }
 void loop() {
@@ -266,8 +266,8 @@ void irp_encoder(void)
 		else {
 			encoder_div++;
 		}
-        Serial.print("Enc = ");
-	Serial.println((encoder_div));
+     /* Serial.print("Enc = ");
+	Serial.println((encoder_div));*/
 	}
 }
 

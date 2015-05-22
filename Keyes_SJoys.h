@@ -2,20 +2,20 @@
 #ifndef KESES_SJOYS_H
 #define KESES_SJOYS_H
 
-#define VOLT_VR_MIN 600
-#define VOLT_VR_MAX 900
+#define VOLT_VR_MIN 700
+#define VOLT_VR_MAX 850
 #define VOLT_SW_MIN 10
 #define VOLT_SW_MAX 250
 //STEP_DR = 2  is optimal
 #define STEP_DR 2
-#define BREAK_INIT 512
+#define BREAK_INIT 2048
 #define DIF_TIME_CLEAR_BREAK 200
 
 #define SHIFT_FOR_FILTER 2
 #define MAX_VAL_ENC 128
 #define STEP_RANGE 19200
 
-#define STEP_ENCOD 1000
+#define STEP_ENCOD 500
 
 #include "Configuration.h"
 #include "Arduino.h"
