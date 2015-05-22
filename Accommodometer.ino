@@ -3,16 +3,23 @@
 #include <SD.h>
 #include "ColorLCDShield.h"
 #include "Keyes_SJoys.h"
+#include "VGA.h"
+
 #include <inttypes.h>
 
 #define SD_CS   2  // Chip select line for SD card
-#define BKL   41 
-#define LED   35 
+#define BKL   29 
+#define LED   23 
 
 LCDShield lcd;
 KeyesSjoys KeSj;
 char prcl;
 volatile int encoder_div;
+
+
+uint32_t st_time1;
+byte thisByte = 33; 
+
 void setup() {
   Serial.begin(9600);
   
@@ -35,11 +42,29 @@ void setup() {
   KeSj.init(&encoder_div);
   attachInterrupt(PIN_B, irp_encoder, RISING);
   encoder_div = 0;
-
+  
+  VGA.begin(320,240,VGA_COLOUR);
+  VGA.println("ASCII Table ~ Character Map"); 
+  
+  st_time1 = millis();
 }
 void loop() {
 	COM();
 	KeSj.task();
+if ((millis() - st_time1)>500)
+{
+  VGA.write(thisByte);    
+  VGA.print(", dec: "); 
+  VGA.print(thisByte);      
+  VGA.print(", hex: "); 
+  VGA.print(thisByte, HEX);     
+  VGA.print(", oct: "); 
+  VGA.print(thisByte, OCT);     
+  VGA.print(", bin: "); 
+  VGA.println(thisByte, BIN);   
+  thisByte++;  
+  st_time1=millis();
+  }
 }
 
 // This function opens a Windows Bitmap (BMP) file and

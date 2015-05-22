@@ -188,10 +188,10 @@
 #endif
 */
 //*	Arduino Duemilanove bit numbers
-  	#define LCD_RES		        43		// D8
+  	#define LCD_RES		        31		// D8
 	#define CS			33		// D9
-	#define DIO			39		// D11
-	#define SCK_PIN			37		// D13
+	#define DIO			27		// D11
+	#define SCK_PIN			25		// D13
 	//#define LCD_PORT	PORTB
 
 	//*	Arduino Duemilanove ports
