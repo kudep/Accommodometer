@@ -92,16 +92,26 @@ void KeyesSjoys::task(void)
 
 int KeyesSjoys::read_pin_vr(int pin)
 {
-	if (VOLT_VR_MIN > analogRead(pin)) return -1;
-	else if (VOLT_VR_MAX < analogRead(pin)) return 1;
+  static int signal_value=0;
+    signal_value=reading_signal(pin);
+	if (VOLT_VR_MIN > signal_value) return -1;
+	else if (VOLT_VR_MAX < signal_value) return 1;
 	return 0;
 }
 
 bool KeyesSjoys::read_pin_sw(void)
 {
-	if (VOLT_SW_MIN > analogRead(SW)) return true;
+	if (VOLT_SW_MIN > reading_signal(SW)) return true;
 	return false;
 
+}
+
+int KeyesSjoys::reading_signal(int pin)
+{
+  int reading_signal=0;
+  for(int i=0;i<32;i++)
+  reading_signal+=analogRead(pin);
+  return reading_signal>>5;
 }
 
 int  KeyesSjoys::transl(int var, int max, int unity)

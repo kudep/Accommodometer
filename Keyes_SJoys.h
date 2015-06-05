@@ -41,6 +41,7 @@ private:
 
 	int flag_forw_go(void);
 	int flag_back_go(void);
+	int reading_signal(int pin);
 
 	A4988 driver;
 	volatile int *p_encoder_div;
