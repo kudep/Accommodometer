@@ -154,6 +154,14 @@ int KeyesSjoys::flag_back_go(void)
 	else return 0;
 
 }
+void KeyesSjoys::point_set(void)
+{
+	driver.clr_bias();
+}
+void KeyesSjoys::back_to_point(void)
+{
+	driver.return_back();
+}
 void KeyesSjoys::value(void)
 {
 

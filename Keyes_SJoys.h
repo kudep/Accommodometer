@@ -30,6 +30,8 @@ public:
 	void init(volatile int *encoder_div);
 	void task(void);
 	void irp_encoder(void);
+	void point_set(void);
+	void back_to_point(void);
 	void value(void);
 	char *glob_str;
 private:

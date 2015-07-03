@@ -306,6 +306,12 @@ void COM(void)
 		case 0:  //"0" - Clear
 			bmpDraw(change_str(), 0, 0);
 			break;
+		case 1:  //"1" - Point is pointed
+			KeSj.point_set();
+			break;
+		case 2:  //"2" - back to point
+			KeSj.back_to_point();
+			break;
 
 		default:
 			Serial.println("Invalid");
